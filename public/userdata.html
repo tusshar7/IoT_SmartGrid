@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+        User Name:<input type="text" id="name" ><br>
+        Address:<input type="text" id="address"><br>
+        Phone No.:<input type="tel" id="phone"><br>
+        Email_Id:<input type="email" id="mail"><br>
+        Connection:
+        <br>
+        <input type="radio">Single Phase<br>
+        <input type="radio">Three Phase<br>
+        Bill Number:<input type="number" id="bill"><br>
+        Sanctioned Consumer Load:<input type="number" id="load"><br>
+        <button type="button"  id="submit">Submit</button>
+        <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+    authDomain: "testing-2785b.firebaseapp.com",
+    databaseURL: "https://testing-2785b.firebaseio.com",
+    projectId: "testing-2785b",
+    storageBucket: "testing-2785b.appspot.com",
+    messagingSenderId: "746327974390"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="/users.js"></script>
+</body>
+
+</html>

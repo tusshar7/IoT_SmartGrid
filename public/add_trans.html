@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+    <h1>Transformer:</h1>
+        ID:<input type="number" id="trans_id"><br>
+        Location:<input type="text" id="location" ><br>
+        Parent Node:<input type="number" id="pnode"><br>
+        Child Node.:<input type="number" id="cnode"><br>
+        Power Rating:<input type="number" id="rating"><br>
+       I<sub>R</sub>:<input type="number" id="ir"><br>
+       I<sub>Y</sub>:<input type="number" id="iy"><br>
+       I<sub>B</sub>:<input type="number" id="ib"><br>
+       Last Overhead Date:<input type="date" id="date"><br>
+       Staff_ID:<input type="number" id="sid"><br>
+       Substation_ID:<input type="number" id="subid"><br>
+        <button type="button"  id="submit">Submit</button>
+        <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+    authDomain: "testing-2785b.firebaseapp.com",
+    databaseURL: "https://testing-2785b.firebaseio.com",
+    projectId: "testing-2785b",
+    storageBucket: "testing-2785b.appspot.com",
+    messagingSenderId: "746327974390"
+  };
+  firebase.initializeApp(config);
+</script>
+<script src="/addtrans.js"></script>
+</body>
+
+</html>

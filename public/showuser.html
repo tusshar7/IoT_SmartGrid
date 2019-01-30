@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+    <div>
+            Enter User Id<input type="number" id="node_id">
+            <br><button id="Submit">Fetch Data</button>
+            <button id="graph">Show Power Graph</button>
+    </div>
+    <div>
+            <table id="table" style="width:100%" border="1px">
+                    <tr>
+                      <th id="id">User_ID</th>
+                      <th id="date">Date</th>
+                      <th id="time">Time</th>
+                      <th id="load">Load(KW)</th>
+                      <th id="rpw">Reactive Power(kVAR)</th>
+                      <th id="tpw">Total Power(kVA)</th>
+                      <th id="energy">Energy(kWh)</th>
+                      <th id="thd">I<sub>THD</sub></th>
+                      <th id="vr">V<sub>R</sub></th>
+                      <th id="vy">V<sub>Y</sub></th>
+                      <th id="vb">V<sub>B</sub></th>
+                      <th id="ir">I<sub>R</sub></th>
+                      <th id="iy">I<sub>Y</sub></th>
+                      <th id="ib">I<sub>B</sub></th>
+                      <th id="pf">Power Factor</th>
+                    </tr>
+         </table>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+        authDomain: "testing-2785b.firebaseapp.com",
+        databaseURL: "https://testing-2785b.firebaseio.com",
+        projectId: "testing-2785b",
+        storageBucket: "testing-2785b.appspot.com",
+        messagingSenderId: "746327974390"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="/user_data.js"></script>
+</body>
+</html>

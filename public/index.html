@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+   
+   <script src="/socket.io/socket.io.js"></script>
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+  <div>
+ Enter The Number Of Node<input type="number" id="node">
+ <br>
+ User Id<input type="number" id="user"><br>
+ Phase<input type="number" id="phase"><br>
+ Action To Be Taken<input type="text" id="action"><br>
+ <button type="button" id="add">Add</button>
+</div>
+ <button type="button" id="map">Show Map</button>
+ <a href="/user_data">Add User</a><br>
+ <a href="/user_details">Show User Data</a>
+ <a href="/transformer_status">Transformer Data</a>
+ <a href="/add_trans">Add Transformer</a>
+ <a href="/node_status">Show Node Status</a>
+ <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+    authDomain: "testing-2785b.firebaseapp.com",
+    databaseURL: "https://testing-2785b.firebaseio.com",
+    projectId: "testing-2785b",
+    storageBucket: "testing-2785b.appspot.com",
+    messagingSenderId: "746327974390"
+  };
+  firebase.initializeApp(config);
+</script>
+  <script src="/mcu.js"></script>
+</body>
+</html>
