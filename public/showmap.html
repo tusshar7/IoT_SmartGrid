@@ -7,6 +7,23 @@
     <title>Document</title>
 </head>
 <body>
-    Coming Soon!
+        <div id="map" style="height: 500px; width: 100%;"></div>
+        <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+            authDomain: "testing-2785b.firebaseapp.com",
+            databaseURL: "https://testing-2785b.firebaseio.com",
+            projectId: "testing-2785b",
+            storageBucket: "testing-2785b.appspot.com",
+            messagingSenderId: "746327974390"
+          };
+          firebase.initializeApp(config);
+        </script>
+           <script src="showmap.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U&callback=initMap"
+    async defer></script>
+
 </body>
 </html>

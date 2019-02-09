@@ -1,5 +1,6 @@
 
 $(function () {
+    let userid=$('#userid')
     let name = $('#name')
     let address = $('#address')
     let phone= $('#phone')
@@ -8,7 +9,8 @@ $(function () {
     let load= $('#load')
     let submit=$('#submit')
     submit.click(function () {
-        firebase.database().ref('/Users_Database').set({
+        let id=userid.val()
+        firebase.database().ref('/Users_Database/'+id+'/').set({
             name:name.val(),
             address:address.val(),
             phone:phone.val(),
