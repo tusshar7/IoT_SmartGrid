@@ -1,11 +1,13 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<script src="showgraph.js">
 </script>
 </head>
 <body>
 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="jquery-3.2.1.js"></script>
+User_ID:<input id="user" type="number"><br><button id="submit">Request</button>
+  <ul id="limits"></ul>
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
         <script>
@@ -20,5 +22,6 @@
           };
           firebase.initializeApp(config);
         </script>
+        <script src="showgraph.js"></script>
 </body>
 </html>

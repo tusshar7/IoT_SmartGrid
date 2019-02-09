@@ -16,7 +16,6 @@ io.on('connection',function(socket){
     console.log(data.action)
 });
 });
-app.use(cors())
 app.use('/user_data',express.static('public/userdata.html'))
 app.use('/user_details',express.static('public/showuser.html'))
 app.use('/transformer_status',express.static('public/transdata.html'))
@@ -25,4 +24,5 @@ app.use('/node_status',express.static('public/nodestat.html'))
 app.get('/showgraph',function(req,res){
     res.sendFile(path.join(__dirname+'/public/showgraph.html'))
 })
+app.use('/showmap',express.static('public/showmap.html'))
 server.listen(4000, () => console.log('Website open on http://localhost:2345'))

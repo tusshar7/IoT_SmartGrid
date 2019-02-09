@@ -1,16 +1,27 @@
-window.onload = function () {
+
+// window.onload = function () {
+  $(function () {
+    let limits=$('#limits')
+  let submit=$('#submit');
+  submit.click( function() {
+    let counter;
+    let powerlimit;
+    let user=$('#user').val();
+  console.log(user);
+    let node=user.slice(0,2)
+    let userno=user.slice(2,4)
   var dps = []; // dataPoints
   let chartContainer=document.getElementById("chartContainer")
   var chart = new CanvasJS.Chart("chartContainer", {
     title :{
-      text: "Dynamic Data",
+      text: "Power Info Of User:"+user,
     },
     axisX:{
       title: "time",
       gridThickness: 2,
-      interval:1, 
-      intervalType:"hour",        
-      valueFormatString: "hh:mm:ss TT", 
+      interval:2, 
+      intervalType:"seconds",
+      valueFormatString: "hh:mm", 
     },
     axisY: {
       includeZero: true,
@@ -26,15 +37,29 @@ window.onload = function () {
   var updateChart = function (count) {
     var userdata;
     var j=0;
-    count = count || 1;
-     firebase.database().ref('/nodes/node01/user05').on("value",function(snapshot){
+    // count = count || 1;
+     firebase.database().ref('/nodes/node'+node+'/user'+userno).once("value",function(snapshot){
       userdata=snapshot.val()
+      if(userdata==null&&j==0)
+      {
+        window.alert("No Such User!!")
+      }
       while(j<count){
+        let time ={
+         hh:new Date().getHours(),
+         mm:new Date().getMinutes()}
       dps.push({
-        x: new Date().toLocaleTimeString(),
+        x: new Date(),
         y: userdata.power
       });
       j++;
+      if(userdata.power>100&&powerlimit!=userdata.power&&counter!=time.hh+time.mm)
+      {
+        // window.alert("Limit Exceeded at time:"+ time.hh+":"+time.mm)
+        limits.append("<li>" + "Limit Exceeded at time:"+ time.hh+":"+time.mm + "</li>")
+        counter=time.hh+time.mm
+        powerlimit=userdata.power
+      }
     }
      })
   
@@ -44,7 +69,7 @@ window.onload = function () {
     chart.render();
   };
   console.log(dps)
-  updateChart(dataLength);
-  setInterval(function(){updateChart()},1000);
-  
-  }
+  updateChart(5);
+  setInterval(function(){updateChart(5)},1000);
+})
+  })
