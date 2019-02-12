@@ -79,5 +79,5 @@ function initMap()
     }
     map=new google.maps.Map(document.getElementById("map"),options);
     
-    // addmarker({lat:29.9418,lng:76.8173})
+     addmarker_user({lat:29.9418,lng:76.8173})
 }
