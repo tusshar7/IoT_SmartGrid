@@ -25,4 +25,5 @@ app.get('/showgraph',function(req,res){
     res.sendFile(path.join(__dirname+'/public/showgraph.html'))
 })
 app.use('/showmap',express.static('public/showmap.html'))
+app.use('/add_substation',express.static('public/substation_static.html'))
 server.listen(4000, () => console.log('Website open on http://localhost:2345'))

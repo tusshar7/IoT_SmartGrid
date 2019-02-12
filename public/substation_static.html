@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="jquery-3.2.1.js"></script>
+</head>
+<body>
+    <h1>Add New Substation</h1>
+    ID:<input id="id"><br>
+    Parent Node<input id="parentnode"><br>
+    Staff ID:<input id="staffid"><br>
+    Location:<input id="location"><br>
+    Voltage Rating Of Input Line<input id="vratinginput"><br>
+    Power Rating Of Input Line<input id="pratinginput"><br>
+    Power Rating Of Output Line 1:<input id="out1"><br>
+    Power Rating Of Output Line 2:<input id="out2"><br>
+    Power Rating Of Output Line 3:<input id="out3"><br>
+    Theft Since Last Billing:<input id="theft"><br>
+    <button id="submit">Submit</button>
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+        authDomain: "testing-2785b.firebaseapp.com",
+        databaseURL: "https://testing-2785b.firebaseio.com",
+        projectId: "testing-2785b",
+        storageBucket: "testing-2785b.appspot.com",
+        messagingSenderId: "746327974390"
+      };
+      firebase.initializeApp(config);
+    </script>
+    <script src="substationadd.js"></script>
+</body>
+</html>

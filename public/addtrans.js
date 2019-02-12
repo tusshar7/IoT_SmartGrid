@@ -1,4 +1,4 @@
-var NodeGeocoder=require('node-geocoder')
+
 $(function () {
     let trans_id=$('#trans_id')
     let location = $('#location')

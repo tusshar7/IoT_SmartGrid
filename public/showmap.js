@@ -1,14 +1,15 @@
 var map;
 var userdata;
-var Transformer;
-var addresses=[];
+var Transformer,Substation;
+var icon=[];
+icon.push('http://maps.google.com/mapfiles/kml/paddle/S.png')
 firebase.database().ref('/Users_Database/').on("value",function(snapshot){
   userdata=snapshot.val()
   for(var i in userdata)
   {
     var j=userdata[i];
     console.log(j.address)
-    findcord(j.address,"user")
+    findcord(j.address,0)
   }
 })
 firebase.database().ref('/Transformer/').on("value",function(snapshot){
@@ -17,35 +18,30 @@ firebase.database().ref('/Transformer/').on("value",function(snapshot){
     {
       var j=Transformer[i];
       console.log(j.location)
-      findcord(j.location,"transformer")
+      findcord(j.location,0)
     }
   })
-function addmarker_user(cords)
+  
+  firebase.database().ref('/Substation/').on("value",function(snapshot){
+    Substation=snapshot.val()
+    for(var i in Substation)
     {
-        var marker=new google.maps.Marker({
-            position:cords,
-            map:map
-            // icon:'http://maps.google.com/mapfiles/kml/paddle/S.png'
-        })  
+      var j=Substation[i];
+      console.log(j.location)
+      findcord(j.location,0)
     }
-    function addmarker_substation(cords)
+  })
+    function addmarker(cords,no)
     {
         var marker=new google.maps.Marker({
             position:cords,
             map:map,
-            icon:'http://maps.google.com/mapfiles/kml/paddle/S.png'
+            icon:icon[no]
         })  
-    }
-    function addmarker_transformer(cords)
-    {
-        var marker=new google.maps.Marker({
-            position:cords,
-            map:map,
-            icon:'http://maps.google.com/mapfiles/kml/paddle/S.png'
-        })  
+
     }
 
-function findcord(address,str){
+function findcord(address,num){
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode( { 'address': address}, function(results, status) {
 
@@ -55,18 +51,7 @@ function findcord(address,str){
             console.log(latitude)
             console.log(longitude)
             cords={lat:latitude,lng:longitude}
-            if(str=="substation")
-            {
-             addmarker_substation(cords)
-            }
-            else if(str=="transformer")
-            {
-             addmarker_transformer(cords)
-            }
-            else if(str=="user")
-            {
-                addmarker_user(cords)
-            }
+            addmarker(cords,num)
             } 
         }); 
 }
@@ -78,6 +63,4 @@ function initMap()
         center:{lat:29.9476,lng: 76.8155}
     }
     map=new google.maps.Map(document.getElementById("map"),options);
-    
-     addmarker_user({lat:29.9418,lng:76.8173})
 }

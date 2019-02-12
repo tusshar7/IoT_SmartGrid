@@ -7,7 +7,7 @@ $(function () {
      var rpwr,tpwr,ithd,vy,vr,vb,ir,iy,ib,power,pf,theft;
     submit.click(function () {
      let node_id=nodeid.val()
-            firebase.database().ref('/nodes/node'+node+'/user'+user).on("value",function(snapshot){
+            firebase.database().ref('/nodes/node'+node+'/').once("value",function(snapshot){
             userdata=snapshot.val();
             console.log(userdata);
                rpwr=userdata.rpwr;
