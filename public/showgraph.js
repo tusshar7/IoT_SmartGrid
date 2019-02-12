@@ -38,7 +38,7 @@
     var userdata;
     var j=0;
     // count = count || 1;
-     firebase.database().ref('/nodes/node'+node+'/user'+userno).once("value",function(snapshot){
+     firebase.database().ref('/nodes/'+node+'/'+userno).once("value",function(snapshot){
       userdata=snapshot.val()
       if(userdata==null&&j==0)
       {
