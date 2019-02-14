@@ -8,8 +8,8 @@
     let powerlimit;
     let user=$('#user').val();
   console.log(user);
-    let node=user.slice(0,2)
-    let userno=user.slice(2,4)
+    let node=user.split('-')[0];
+    let userno=user.split('-')[1];
   var dps = []; // dataPoints
   let chartContainer=document.getElementById("chartContainer")
   var chart = new CanvasJS.Chart("chartContainer", {

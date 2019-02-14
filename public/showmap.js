@@ -2,6 +2,7 @@ var map;
 var userdata,ud;
 var flightPath;
 var substation_cords=[];
+var users_stat=[];
 var nodes_cords=[];
 var trans_cords=[];
 var blackout,bdata;
@@ -40,35 +41,31 @@ setInterval(function(){firebase.database().ref('/Transformer/').on("value",funct
         makeline('green',[{lat:j.lat,lng:j.lng},substation_cords[sub]]);
     }
   })},2000)
-//   firebase.database().ref('/nodes/').on("value",function(snapshot){
-//     dataset=snapshot.val()
-//     for(var i in dataset)
-//     {
-//         var j=dataset[i];
-//         blackout=i;
-//      for( k in j)
-//      {
-//         var l=j[k];
-//         blackout=blackout+k;
-//          if(l.voltage==0)
-//          {
-            
-//             firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
-//                 bdata=snapshot.val();
-//                 findcord(bdata.address,3)
-//             }) 
-//          }
-//          else
-//          {
-//             firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
-//                 bdata=snapshot.val();
-//                 findcord(bdata.address,2)
-//             })
-//          }
-//          blackout=i;
-//      }
-//     }
-//   })
+  firebase.database().ref('/nodes/').on("value",function(snapshot){
+    var nodes_dynamic=snapshot.val()
+    for(var i in nodes_dynamic)
+    {  
+        var j=nodes_dynamic[i];
+        for(var k in j)
+        {
+            var l=j[k];var index=i+'-'+k;
+            console.log(index)
+            if(l.voltage==0)
+            {
+                users_stat[index]={color:'black'}
+            }
+            else if(l.power>100)
+            {
+               users_stat[index]={color:'red'}
+            }
+            else
+            {
+                users_stat[index]={color:'green'}
+            }
+            // console.log(users_stat[index].color)
+        }
+    }
+  })
 setInterval(function(){firebase.database().ref('/Users_Database/').on("value",function(snapshot){
    var dataset=snapshot.val()
    for(var i in dataset)
@@ -77,7 +74,7 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
        addmarker({lat:j.lat,lng:j.lng},2)
        var k=i.split("-")[0];
        var l=i.split("-")[1];
-       makeline('green',[nodes_cords[k],{lat:j.lat,lng:j.lng}])
+       makeline(users_stat[i].color,[nodes_cords[k],{lat:j.lat,lng:j.lng}])
    }
 })},2000)
   setInterval(function(){firebase.database().ref('/Substation/').on("value",function(snapshot){
@@ -99,10 +96,11 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
       if(identify=='T')
       {
          makeline('purple',[{lat:j.lat,lng:j.lng},trans_cords[parent.slice(1,2)]])
+
       }
       else
       { 
-        makeline('black',[{lat:j.lat,lng:j.lng},nodes_cords[parent]])
+        makeline('green',[{lat:j.lat,lng:j.lng},nodes_cords[parent]])
       }
     }
   })},2000)
@@ -119,10 +117,11 @@ function makeline(color,coordinates)
 {
     // console.log(coordinates)
     flightPath=new google.maps.Polyline({
-         geodesic: true,
+         geodesic: false,
         strokeColor: color,
         strokeOpacity: 0.5,
         map:map,
+        editable:false,
         strokeWeight: 1,
         path:coordinates
     })
