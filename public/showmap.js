@@ -1,87 +1,111 @@
 var map;
 var userdata,ud;
 var flightPath;
-var coordinates=[];
+var substation_cords=[];
+var nodes_cords=[];
+var trans_cords=[];
 var blackout,bdata;
-var Transformer,Substation,dataset,nodes;
 var icon=['http://maps.google.com/mapfiles/kml/paddle/S.png','blue.JPG','green.JPG','black.JPG','yello.JPG']
-// icon.push('http://maps.google.com/mapfiles/kml/paddle/S.png')
-firebase.database().ref('/Users_Database/').on("value",function(snapshot){
-  userdata=snapshot.val()
-  for(var i in userdata)
+firebase.database().ref('/Substation/').on("value",function(snapshot){
+  var subs=snapshot.val();
+  for(var i in subs)
   {
-    var j=userdata[i];
-    findcord(j.address,2)
+      var j=subs[i];
+      substation_cords[i]={lat:j.lat,lng:j.lng};
   }
 })
 firebase.database().ref('/Transformer/').on("value",function(snapshot){
-    Transformer=snapshot.val()
+    var trans=snapshot.val();
+    for(var i in trans)
+    {
+        var j=trans[i];
+        trans_cords[i]={lat:j.lat,lng:j.lng};
+    }
+  })
+firebase.database().ref('/nodes_static/').on("value",function(snapshot){
+    var ns=snapshot.val();
+    for(var i in ns)
+    {
+        var j=ns[i];
+        nodes_cords[i]={lat:j.lat,lng:j.lng};
+    }
+  })
+setInterval(function(){firebase.database().ref('/Transformer/').on("value",function(snapshot){
+    var Transformer=snapshot.val()
     for(var i in Transformer)
-    {
-      var j=Transformer[i];
-      console.log(j.location)
-      findcord(j.location,1)
+    {  
+        var j=Transformer[i];
+         var sub=j.subid
+        addmarker({lat:j.lat,lng:j.lng},1)
+        makeline('green',[{lat:j.lat,lng:j.lng},substation_cords[sub]]);
     }
-  })
-  firebase.database().ref('/nodes/').on("value",function(snapshot){
-    dataset=snapshot.val()
-    for(var i in dataset)
-    {
-        var j=dataset[i];
-        blackout=i;
-     for( k in j)
-     {
-        var l=j[k];
-        blackout=blackout+k;
-         if(l.voltage==0)
-         {
+  })},2000)
+//   firebase.database().ref('/nodes/').on("value",function(snapshot){
+//     dataset=snapshot.val()
+//     for(var i in dataset)
+//     {
+//         var j=dataset[i];
+//         blackout=i;
+//      for( k in j)
+//      {
+//         var l=j[k];
+//         blackout=blackout+k;
+//          if(l.voltage==0)
+//          {
             
-            firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
-                bdata=snapshot.val();
-                findcord(bdata.address,3)
-            }) 
-         }
-         else
-         {
-            firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
-                bdata=snapshot.val();
-                findcord(bdata.address,2)
-            })
-         }
-         blackout=i;
-     }
-    }
-  })
-  firebase.database().ref('/Substation/').on("value",function(snapshot){
-    Substation=snapshot.val()
+//             firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
+//                 bdata=snapshot.val();
+//                 findcord(bdata.address,3)
+//             }) 
+//          }
+//          else
+//          {
+//             firebase.database().ref('/Users_Database/'+blackout+'/').once("value",function(snapshot){
+//                 bdata=snapshot.val();
+//                 findcord(bdata.address,2)
+//             })
+//          }
+//          blackout=i;
+//      }
+//     }
+//   })
+setInterval(function(){firebase.database().ref('/Users_Database/').on("value",function(snapshot){
+   var dataset=snapshot.val()
+   for(var i in dataset)
+   {
+       var j=dataset[i];
+       addmarker({lat:j.lat,lng:j.lng},2)
+       var k=i.split("-")[0];
+       var l=i.split("-")[1];
+       makeline('green',[nodes_cords[k],{lat:j.lat,lng:j.lng}])
+   }
+})},2000)
+  setInterval(function(){firebase.database().ref('/Substation/').on("value",function(snapshot){
+    var Substation=snapshot.val()
     for(var i in Substation)
     {
       var j=Substation[i];
-      console.log(j.location)
-      findcord(j.location,0)
+      addmarker({lat:j.lat,lng:j.lng},0)
     }
-  })
-  firebase.database().ref('/nodes_static/').on("value",function(snapshot){
-    nodes=snapshot.val()
+  })},2000)
+  setInterval(function(){firebase.database().ref('/nodes_static/').once("value",function(snapshot){
+    var nodes=snapshot.val()
     for(var i in nodes)
     {
       var j=nodes[i];
       addmarker({lat:j.lat,lng:j.lng})
-    //   findcord(j.location,4)
-    //   console.log(j.location)
-      if(j.parentid)
+      var parent=j.parentid
+      var identify=parent.slice(0,1)
+      if(identify=='T')
+      {
+         makeline('purple',[{lat:j.lat,lng:j.lng},trans_cords[parent.slice(1,2)]])
+      }
+      else
       { 
-        firebase.database().ref('/nodes_static/'+j.parentid+'/').once("value",function(snapshot){
-              ud=snapshot.val();
-            //   findonlycord(ud.location)
-            //   setInterval(makeline('red',coordinates),1000)
-            coordinates=[{lat:j.lat,lng:j.lng},{lat:ud.lat,lng:ud.lng}]
-            addmarker({lat:ud.lat,lng:ud.lng})
-            makeline('green',coordinates)
-        })
+        makeline('black',[{lat:j.lat,lng:j.lng},nodes_cords[parent]])
       }
     }
-  })
+  })},2000)
     function addmarker(cords,no)
     {
         var marker=new google.maps.Marker({
@@ -91,47 +115,15 @@ firebase.database().ref('/Transformer/').on("value",function(snapshot){
         })  
     //   makeline()
     }
-
-function findcord(address,num){
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': address}, function(results, status) {
-
-        if (status == google.maps.GeocoderStatus.OK) {
-            var latitude = results[0].geometry.location.lat();
-            var longitude = results[0].geometry.location.lng();
-            cords={lat:latitude,lng:longitude}
-            addmarker(cords,num)
-            if(num==4)
-            {
-                coordinates.length=[];
-                coordinates.push(cords)
-            }
-            } 
-        }); 
-}
-function findonlycord(address){
-    var geocoder = new google.maps.Geocoder();
-    geocoder.geocode( { 'address': address}, function(results, status) {
-        if (status == google.maps.GeocoderStatus.OK) {
-            var latitude = results[0].geometry.location.lat();
-            var longitude = results[0].geometry.location.lng();
-            cords={lat:latitude,lng:longitude}
-            coordinates.push(cords)
-            // console.log(coordinates)
-            } 
-            else
-            {console.log("error")}
-        }); 
-}
 function makeline(color,coordinates)
 {
-    console.log(coordinates)
+    // console.log(coordinates)
     flightPath=new google.maps.Polyline({
          geodesic: true,
         strokeColor: color,
-        strokeOpacity: 1.0,
+        strokeOpacity: 0.5,
         map:map,
-        strokeWeight: 2,
+        strokeWeight: 1,
         path:coordinates
     })
 }

@@ -11,7 +11,7 @@
     <h1>Transformer:</h1>
         ID:<input type="number" id="trans_id"><br>
         Location:<input type="text" id="location" ><br>
-        Parent Node:<input type="number" id="pnode"><br>
+        Parent Node:<input type="text" id="pnode"><br>
         Child Node.:<input type="text" id="cnode"><br>
         Power Rating:<input type="number" id="rating"><br>
        I<sub>R</sub>:<input type="number" id="ir"><br>
@@ -34,6 +34,8 @@
   };
   firebase.initializeApp(config);
 </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U&callback=initMap"
+async defer></script>
 <script src="/addtrans.js"></script>
 </body>
 

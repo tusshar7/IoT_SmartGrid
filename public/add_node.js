@@ -19,15 +19,15 @@ $(function () {
                  latitude = results[0].geometry.location.lat();
                  longitude = results[0].geometry.location.lng();
                 console.log(latitude)
-            }}) 
-           
+            }})    
     }
     var latitude,longitude;
     submit.click(function(){
         findcord(location.val())
         // console.log(data)
        let id=node.val();
-       setInterval(function(){
+       setTimeout(function(){
+           console.log("yo")
        firebase.database().ref('/nodes_static/'+id).set({
            Three_Ph:threeph.val(),
            Single_Ph:singleph.val(),
@@ -41,6 +41,6 @@ $(function () {
            last_week_units:last.val(),
            bill:bill.val()
        })}
-    ,1000)
+    ,3000)
     })
 })

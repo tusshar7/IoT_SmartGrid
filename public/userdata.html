@@ -8,7 +8,7 @@
     <script src="jquery-3.2.1.js"></script>
 </head>
 <body>
-        User ID:<input type="number" id="userid"><br>
+        User ID:<input type="text" id="userid"><br>
         User Name:<input type="text" id="name" ><br>
         Address:<input type="text" id="address"><br>
         Phone No.:<input type="tel" id="phone"><br>
@@ -33,6 +33,8 @@
   };
   firebase.initializeApp(config);
 </script>
+ <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U&callback=initMap"
+ async defer></script>
 <script src="/users.js"></script>
 </body>
 
