@@ -1,10 +1,14 @@
 var map;
 var userdata,ud;
 var flightPath;
+var total_nodes;
 var substation_cords=[];
 var users_stat=[];
 var nodes_cords=[];
 var trans_cords=[];
+var nodes_child=[];
+var node_power=[];
+var nodes_users=[];
 var blackout,bdata;
 var icon=['http://maps.google.com/mapfiles/kml/paddle/S.png','blue.JPG','green.JPG','black.JPG','yello.JPG']
 firebase.database().ref('/Substation/').on("value",function(snapshot){
@@ -25,12 +29,36 @@ firebase.database().ref('/Transformer/').on("value",function(snapshot){
   })
 firebase.database().ref('/nodes_static/').on("value",function(snapshot){
     var ns=snapshot.val();
+    var max=0;
     for(var i in ns)
     {
         var j=ns[i];
         nodes_cords[i]={lat:j.lat,lng:j.lng};
+        if(i-max>=0)
+        {
+            max=i
+        }
     }
+    total_nodes=max;
+    console.log(total_nodes)
   })
+  firebase.database().ref('/nodes_static/').on("value",function(snapshot){
+  for(var n=1;n<=total_nodes;n++)
+  {
+   var childs=snapshot.val()
+   var a=[];
+    for(var i in childs)
+    {
+        var j=childs[i];
+        if(j.parentid==n)
+        {
+          a.push(i)
+        }
+    }
+    nodes_child[n]=a;
+  }
+  console.log(nodes_child)
+})
 setInterval(function(){firebase.database().ref('/Transformer/').on("value",function(snapshot){
     var Transformer=snapshot.val()
     for(var i in Transformer)
@@ -48,34 +76,47 @@ setInterval(function(){firebase.database().ref('/Transformer/').on("value",funct
         var j=nodes_dynamic[i];
         for(var k in j)
         {
+            var a={}
             var l=j[k];var index=i+'-'+k;
             console.log(index)
+            a={voltage:l.voltage,power:l.power};
             if(l.voltage==0)
             {
-                users_stat[index]={color:'black'}
+                a.color='black';
+                //users_stat[index]={color:'black'}
             }
             else if(l.power>100)
             {
-               users_stat[index]={color:'red'}
+                a.color='red';
             }
             else
             {
-                users_stat[index]={color:'green'}
+                a.color='green';
             }
-            // console.log(users_stat[index].color)
+            users_stat[index]=a;
+            console.log(users_stat[index])
         }
     }
   })
 setInterval(function(){firebase.database().ref('/Users_Database/').on("value",function(snapshot){
    var dataset=snapshot.val()
+   for(var n=1;n<=total_nodes;n++)
+  {
+      var a=[];
    for(var i in dataset)
    {
        var j=dataset[i];
        addmarker({lat:j.lat,lng:j.lng},2)
        var k=i.split("-")[0];
        var l=i.split("-")[1];
+       if(n==k)
+       {
+        a.push(l)
+       }
        makeline(users_stat[i].color,[nodes_cords[k],{lat:j.lat,lng:j.lng}])
    }
+   nodes_users[n]=a;
+}
 })},2000)
   setInterval(function(){firebase.database().ref('/Substation/').on("value",function(snapshot){
     var Substation=snapshot.val()
@@ -143,3 +184,28 @@ function initMap()
     //     strokeWeight: 2
     //   });
 }
+///theft part
+setTimeout(function(){
+    for(var i=total_nodes;i>0;i--)
+    {
+        var power=0;
+        console.log(nodes_users)
+        for(var m=0;m<nodes_users[i].length;m++)
+        { 
+            var k=i+'-'+nodes_users[i][m];
+            console.log(k)
+           power=users_stat[k].power+power;  
+        }
+        for(var m=0;m<nodes_child[i].length;m++)
+        {
+            power=power+node_power[nodes_child[i][m]];
+            console.log(node_power[nodes_child[i][m]])
+        }
+        node_power[i]=power;
+        console.log(power)
+        firebase.database().ref('/PowerAtNodes/'+i+'/').set
+        ({
+            Total_Power:power
+        })
+    }
+    },5000)
