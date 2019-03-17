@@ -150,10 +150,20 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
         var marker=new google.maps.Marker({
             position:cords,
             map:map,
-            icon:icon[no]
+            icon:icon[no],
+            url:'http://localhost:3000/node_actions.html',
+            node:5
         })  
-    //   makeline()
+    google.maps.event.addListener(marker,'click', function() {
+        $.post('/node_actions',{node_num:this.node},function(data)
+    {
+     console.log(data);
+    });
+    let url=this.url;
+    setTimeout(function(){window.location.href = url;},3000);
+    });
     }
+   
 function makeline(color,coordinates)
 {
     // console.log(coordinates)
