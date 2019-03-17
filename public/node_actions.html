@@ -9,13 +9,33 @@
     <script src="jquery-3.2.1.js"></script>
 </head>
 <body>
-    <h1>You Have Selected</h1>
-    <ul id="info">
-    <li>Hello</li>
-    </ul>
-    <button>ON</button>
-    <button>OFF</button>
+    <div>
+    <h1>Welcome</h1>
+    <ul id="info"></ul>
+    </div>
+    <div> 
+    <h2>Action To Be Taken</h2>
+    <button id="on">ON</button>
+    <button id="off">OFF</button>
+    </div>
+    <!-- <div> 
+            <h2>Current Status</h2>
+            <ul id="stat"></ul>
+            </div> -->
     </script>
+    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
+            authDomain: "testing-2785b.firebaseapp.com",
+            databaseURL: "https://testing-2785b.firebaseio.com",
+            projectId: "testing-2785b",
+            storageBucket: "testing-2785b.appspot.com",
+            messagingSenderId: "746327974390"
+          };
+          firebase.initializeApp(config);
+        </script>
 </body>
 <script src="node_actions.js"></script>
 </html>

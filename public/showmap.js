@@ -65,7 +65,8 @@ setInterval(function(){firebase.database().ref('/Transformer/').on("value",funct
     {  
         var j=Transformer[i];
          var sub=j.subid
-        addmarker({lat:j.lat,lng:j.lng},1)
+         var nod="T"+i;
+        addmarker({lat:j.lat,lng:j.lng},1,nod)
         makeline('green',[{lat:j.lat,lng:j.lng},substation_cords[sub]]);
     }
   })},2000)
@@ -106,9 +107,10 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
    for(var i in dataset)
    {
        var j=dataset[i];
-       addmarker({lat:j.lat,lng:j.lng},2)
        var k=i.split("-")[0];
        var l=i.split("-")[1];
+       var nod="U"+l+"N"+k;
+       addmarker({lat:j.lat,lng:j.lng},2,nod)
        if(n==k)
        {
         a.push(l)
@@ -123,7 +125,8 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
     for(var i in Substation)
     {
       var j=Substation[i];
-      addmarker({lat:j.lat,lng:j.lng},0)
+      var nod="S"+i;
+      addmarker({lat:j.lat,lng:j.lng},0,nod)
     }
   })},2000)
   setInterval(function(){firebase.database().ref('/nodes_static/').once("value",function(snapshot){
@@ -145,19 +148,20 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
       }
     }
   })},2000)
-    function addmarker(cords,no)
+    function addmarker(cords,no,nod)
     {
         var marker=new google.maps.Marker({
             position:cords,
             map:map,
             icon:icon[no],
             url:'http://localhost:3000/node_actions.html',
-            node:5
+            node:nod
         })  
     google.maps.event.addListener(marker,'click', function() {
         $.post('/node_actions',{node_num:this.node},function(data)
     {
      console.log(data);
+     window.alert("Requesting....Click Okay")
     });
     let url=this.url;
     setTimeout(function(){window.location.href = url;},3000);
