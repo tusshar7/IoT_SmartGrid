@@ -10,6 +10,7 @@ $(function () {
             firebase.database().ref('/Transformer/'+id).on("value",function(snapshot){
              data=snapshot.val();
             console.log(data);
+            if(data!=null){
                rpwr=data.rpwr;  
                tpwr=data.tpwr;
                vy=data.vy;
@@ -20,8 +21,11 @@ $(function () {
                ib=data.ib;
                status=data.status;
                rlpwr=data.rlpwr;
+            }
                
-        })     
+        }) 
+        setTimeout(function(){
+        if(data!=null){    
         var row=table.insertRow(1);
         var c1 = row.insertCell(0);
         var c2 = row.insertCell(1);
@@ -49,5 +53,11 @@ $(function () {
         c11.innerHTML=ir;
         c12.innerHTML=iy;
         c13.innerHTML=ib;
+        }
+        else
+        {
+            window.alert("Invalid Transformer ID")
+        }
+    },2000)
     })
 })

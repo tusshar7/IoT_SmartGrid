@@ -8,9 +8,11 @@ $(function () {
      var load;
     submit.click(function () {
      let node_id=nodeid.val()
-     let node=node_id.slice(0,2)
-     let user=node_id.slice(2,4)
-            firebase.database().ref('/nodes/node'+node+'/user'+user).once("value",function(snapshot){
+     let node=node_id.split("-")[0];
+     let user=node_id.split("-")[1];
+     console.log(node_id);
+     console.log(user);
+            firebase.database().ref('/nodes/'+node+'/'+user+'/').once("value",function(snapshot){
                 userdata=snapshot.val();
             console.log(userdata);
             if(userdata!=null){
@@ -18,16 +20,17 @@ $(function () {
                load=userdata.load;    
                tpwr=userdata.tpwr;
                energy=userdata.energy; 
-               vy=userdata.vy;
-               vr=userdata.vr;
-               vb=userdata.vb;
-               ir=userdata.ir;
-               iy=userdata.iy;
-               ib=userdata.ib;
+               vy=userdata.VoltageB;
+               vr=userdata.VoltageA;
+               vb=userdata.VoltageC;
+               ir=userdata.CurrentA;
+               iy=userdata.CurrentB;
+               ib=userdata.CurrentC;
                ithd=userdata.ithd;
                pf=userdata.pf;
             }
         })     
+        setTimeout(function(){
         if(userdata!=null){
         var row=table.insertRow(1);
         var c1 = row.insertCell(0);
@@ -61,6 +64,11 @@ $(function () {
         c14.innerHTML=ib;
         c15.innerHTML=pf;
         }
+        else
+        {
+            window.alert("Invalid User ID")
+        }
+    },2000)
     })
     graph.click(function(){
         $.get('/showgraph')

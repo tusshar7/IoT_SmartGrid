@@ -9,19 +9,17 @@
     <script src="jquery-3.2.1.js"></script>
 </head>
 <body>
-    <h1>Add Node</h1>
-    ID:<input id="id" type="number"><br>
-    3-Phase Connections:<input id="3ph" type="number"><br>
-    1-Phase Connections:<input id="1ph" type="number"><br>
-    Staff Id:<input id="staff" type="number"><br>
-    Nearest Consumer:<input id="customer" type="number"><br>
-    Location:<input id="location" type="text"><br>
-    Parent Node Id:<input id="parentid" type="number"><br>
-    Power Rating:<input id="rating" type="number"><br>
-    Last Week Units:<input id="last" type="number"><br>
-    Last Billing Date and Time<input id="bill" type="datetime"><br>
-    <button id="submit">Submit</button>
-    <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
+    <h1>Staff Data:</h1>
+    <form action="/staff" method="POST">
+       <input name="ID" placeholder="id" type="number"><br><br>
+       <input name="name" placeholder="Name Of Staff" type="text"><br><br>
+       <input name="address" placeholder="address" type="text"><br><br>
+       <input name="phone" placeholder="phone-no" type="tel"><br><br>
+       <input name="email" placeholder="email-id" type="email"><br><br>
+       <input name="theft" placeholder="theft" type="number"><br><br>
+       <input type="submit">
+    </form>
+        <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
 <script>
   // Initialize Firebase
   var config = {
@@ -36,6 +34,6 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U&callback=initMap"
 async defer></script>
-<script src="/add_node.js"></script>
 </body>
+
 </html>

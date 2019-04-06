@@ -5,21 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-   
+   <link rel="stylesheet" type="text/css" href="stylefile.css">
    <script src="/socket.io/socket.io.js"></script>
     <script src="jquery-3.2.1.js"></script>
 </head>
 <body>
+  <h1>Software For System Control</h1>
   <div>
- Enter The Number Of Node<input type="number" id="node">
- <br>
- User Id<input type="number" id="user"><br>
- Phase<input type="number" id="phase"><br>
- Action To Be Taken<input type="text" id="action"><br>
- <button type="button" id="add">Add</button>
-</div>
-<a href="/showmap">Show Map</a>
- <a href="/user_data">Add User</a><br>
+ <a href="/showmap">Show Map</a>
+ <a href="/user_data">Add User</a>
  <a href="/user_details">Show User Data</a>
  <a href="/transformer_status">Transformer Data</a>
  <a href="/add_trans">Add Transformer</a>
@@ -27,6 +21,14 @@
  <a href="/add_substation">Add Substation</a>
  <a href="/showgraph">Show Real Time Graphs</a>
  <a href="/addnode">Add New Node</a>
+ <a href="/staff">Add Staff Data</a>
+ <a href="/remove">Remove User</a>
+</div>
+<div>
+<img class="mySlides" src="power.jpg">
+<img class="mySlides" src="proffesional.jpg">
+<img class="mySlides" src="hqdefault.jpg">
+</div>
  <script src="https://www.gstatic.com/firebasejs/5.8.0/firebase.js"></script>
 <script>
   // Initialize Firebase

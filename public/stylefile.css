@@ -1,0 +1,39 @@
+body {
+    background-color: lightblue;
+  }
+  
+  h1 {
+    color:black;
+    text-align: center;
+  }
+  h2 {
+      color: grey;
+      text-align: left;
+      size: 3cm;
+      border-block-end: black;
+  }
+  
+  p {
+    font-family: verdana;
+    font-size: 20px;
+  }
+  a:link, a:visited {
+    background-color: #f44336;
+    color: white;
+    padding: 15px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+  }
+  
+  a:hover, a:active {
+    background-color:purple;
+  }
+  .mySlides {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    width: 40%;
+    height: 40%;
+  }

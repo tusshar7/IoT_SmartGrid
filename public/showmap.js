@@ -41,6 +41,7 @@ firebase.database().ref('/nodes_static/').on("value",function(snapshot){
     }
     total_nodes=max;
     console.log(total_nodes)
+    firebase.database().ref('/total_nodes/').set(total_nodes)
   })
   firebase.database().ref('/nodes_static/').on("value",function(snapshot){
   for(var n=1;n<=total_nodes;n++)
@@ -134,7 +135,8 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
     for(var i in nodes)
     {
       var j=nodes[i];
-      addmarker({lat:j.lat,lng:j.lng})
+      var nod="N"+i;
+      addmarker({lat:j.lat,lng:j.lng},undefined,nod)
       var parent=j.parentid
       var identify=parent.slice(0,1)
       if(identify=='T')
@@ -198,28 +200,3 @@ function initMap()
     //     strokeWeight: 2
     //   });
 }
-///theft part
-setTimeout(function(){
-    for(var i=total_nodes;i>0;i--)
-    {
-        var power=0;
-        console.log(nodes_users)
-        for(var m=0;m<nodes_users[i].length;m++)
-        { 
-            var k=i+'-'+nodes_users[i][m];
-            console.log(k)
-           power=users_stat[k].power+power;  
-        }
-        for(var m=0;m<nodes_child[i].length;m++)
-        {
-            power=power+node_power[nodes_child[i][m]];
-            console.log(node_power[nodes_child[i][m]])
-        }
-        node_power[i]=power;
-        console.log(power)
-        firebase.database().ref('/PowerAtNodes/'+i+'/').set
-        ({
-            Total_Power:power
-        })
-    }
-    },5000)

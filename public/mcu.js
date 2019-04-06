@@ -2,20 +2,17 @@ let socket = io();
 socket.on('connected', () => {
     console.log("Connected " + socket.id)
 })
-$(function () {
-    let node = $('#node')
-    let user = $('#user')
-    let phase= $('#phase')
-    let act = $('#action')
-    let add = $('#add')
-    let map= $('#map')
-    add.click(function () {
-        firebase.database().ref('/action').set({
-            status:true,
-            node:node.val(),
-            user:user.val(),
-            act:act.val(),
-            phase:phase.val()
-        });
-    })
-})
+var slideIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+  }
+  slideIndex++;
+  if (slideIndex > x.length) {slideIndex = 1}
+  x[slideIndex-1].style.display = "block";
+  setTimeout(carousel, 3000); // Change image every 2 seconds
+}

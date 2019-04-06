@@ -14,6 +14,14 @@ $(function()
     node=0;
     user=0;
     id=j;
+    firebase.database().ref('/Substation/'+id+'/').once("value",function(snapshot){
+        var snap=snapshot.val();
+        var l=snap.location;
+        $('#info').append('<h2>'+"Location:"+snap.location+'</h2>');
+        $('#info').append('<h2>'+'Voltage Input:'+snap.voltage_input+'</h2>');
+        $('#info').append('<h2>'+'Power Input:'+snap.power_input+'</h2>');
+        $('#info').append('<h2>'+'Parent Node:'+snap.parent_node+'</h2>');
+    })
     }
     else if(i=='T')
     {
@@ -22,13 +30,38 @@ $(function()
     node=0;
     user=0;
     id=j;
+    firebase.database().ref('/Transformer/'+id+'/').once("value",function(snapshot){
+        var snap=snapshot.val();
+        var l=snap.location;
+        $('#info').append('<h2>'+"Location:"+snap.location+'</h2>');
+        $('#info').append('<h2>'+'Rating:'+snap.rating+'</h2>');
+        $('#info').append('<h2>'+'Ib Rated:'+snap.ib+'</h2>');
+        $('#info').append('<h2>'+'Ir Rated:'+snap.ir+'</h2>');
+        $('#info').append('<h2>'+'Iy Rated:'+snap.iy+'</h2>');
+    })
    }
     else if(i=='N'){
-    $('#info').append('<h2>'+ "Selected Node ID:" + j + '</h2>');
+    $('#info').append('<h1>'+ "Selected Node ID:" + j + '</h1>');
     equip=0;
     node=j;
     user=0; 
     id=0;
+    firebase.database().ref('/nodes_static/'+node+'/').once("value",function(snapshot){
+        var snap=snapshot.val();
+        var l=snap.location;
+        $('#info').append('<h2>'+"Location:"+snap.location+'</h2>');
+        $('#info').append('<h2>'+'Phase:'+snap.phase+'</h2>');
+        $('#info').append('<h2>'+'Parent Node:'+snap.parentid+'</h2>');
+        $('#info').append('<h2>'+'Rating:'+snap.rating+'</h2>');
+    })
+    firebase.database().ref('/PowerAtNodes/'+node+'/').once("value",function(snapshot){
+        var snap=snapshot.val();
+        var l=snap.location;
+        var theft=snap.Actual_Power-snap.Total_Power;
+        $('#info').append('<h2>'+"Actual Power:"+snap.Actual_Power+'</h2>');
+        $('#info').append('<h2>'+'Total Power:'+snap.Total_Power+'</h2>');
+        $('#info').append('<h2>'+'Theft:'+theft+'</h2>');
+    })
    }
     else
     {

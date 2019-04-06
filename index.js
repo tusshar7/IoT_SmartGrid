@@ -5,9 +5,14 @@ const socketio = require('socket.io')
 const http = require('http')
 const app = express();
 var phoneNo=[];
+var staffph=[];
+var node_staff=[];
 var number;
-var total_nodes=0;
+ var total_nodes;
+var node_power=[];
+var user_powers=[];
 var childatnodes=[];
+var nodes_child=[];
 var firebase = require("firebase");
 const config = {
     apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
@@ -38,10 +43,12 @@ const nexmo = new Nexmo({
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use('/user_data',express.static('public/userdata.html'))
+app.use('/staff',express.static('public/staff.html'))
 app.use('/user_details',express.static('public/showuser.html'))
 app.use('/transformer_status',express.static('public/transdata.html'))
 app.use('/add_trans',express.static('public/add_trans.html'))
 app.use('/node_status',express.static('public/nodestat.html'))
+app.use('/remove',express.static('public/removeuser.html'))
 app.get('/showgraph',function(req,res){
     res.sendFile(path.join(__dirname+'/public/showgraph.html'))
 })
@@ -62,6 +69,34 @@ app.post('/node_actions',function(req,res)
     res.send("received");
 })
 // app.get('/node_actions',)
+firebase.database().ref('/nodes_static/').on("value",function(snapshot){
+ var snap=snapshot.val();
+ for(var i in snap)
+ {
+     var j =snap[i];
+     node_staff[i]=j.staff;
+ }
+})
+app.post('/staff',function(req,res)
+{
+    let id=req.body.ID;
+    let name=req.body.name;
+    let phone=req.body.phone;
+    let address=req.body.address;
+    let email=req.body.email;
+    let theft=req.body.theft;
+    res.send("done");
+    staffph[id]=phone;
+    firebase.database().ref('/Staff').set
+   ({
+       id:id,
+       name:name,
+       number:phone,
+       email:email,
+       theft:theft,
+       address:address
+   })
+})
 server.listen(3000, () => console.log('Website open on http://localhost:2345'))
 firebase.database().ref('/Users_Database/').on("value",function(snapshot){
 var ph=snapshot.val();
@@ -87,6 +122,7 @@ firebase.database().ref('/Users_Database/').on("value",function(snapshot){
         }
     }
     childatnodes[n]=a;
+    console.log(n+"kechilds"+childatnodes[n])
    }
 })
 firebase.database().ref('/nodes/').on("value",function(snapshot){
@@ -98,6 +134,7 @@ firebase.database().ref('/nodes/').on("value",function(snapshot){
       {
         var index=i+'-'+k;  
         var l=j[k];
+        user_powers[index]=l.power;
           if(l.VoltageA>100&&l.VoltageA-100-l.LimitAmt>200)
           {
              //message part for theft increase;
@@ -125,6 +162,49 @@ firebase.database().ref('/nodes/').on("value",function(snapshot){
       }
   }
 })
+  firebase.database().ref('/nodes_static/').on("value",function(snapshot){
+    let tot=snapshot.val();
+    var count=0;
+    for(var i in tot)
+    {
+        count=count+1;
+    }
+    total_nodes=count;
+    firebase.database().ref('/total_nodes/').set(total_nodes)
+  })
+  firebase.database().ref('/nodes_static/').on("value",function(snapshot){
+    for(var n=1;n<=total_nodes;n++)
+    {
+     var childs=snapshot.val()
+     var a=[];
+      for(var i in childs)
+      {
+          var j=childs[i];
+          if(j.parentid==n)
+          {
+            a.push(i)
+          }
+      }
+      nodes_child[n]=a;
+    }
+  })
+  setInterval(function(){
+    for(var i=total_nodes;i>0;i--)
+    {
+        var power=0;
+        for(var m=0;m<childatnodes[i].length;m++)
+        { 
+            var k=i+'-'+childatnodes[i][m];
+           power=user_powers[k]+power;  
+        }
+        for(var m=0;m<nodes_child[i].length;m++)
+        {
+            power=power+node_power[nodes_child[i][m]];
+        }
+        node_power[i]=power;
+        firebase.database().ref('/PowerAtNodes/'+i+'/Total_Power/').set(power);
+    }
+},1000)
 firebase.database().ref('/PowerAtNodes/').on("value",function(snapshot){
     var data=snapshot.val();
     for(var i in data)
@@ -132,41 +212,56 @@ firebase.database().ref('/PowerAtNodes/').on("value",function(snapshot){
         var j=data[i];
         if(j.Total_Power-j.Actual_Power<0&&j.LimitAmt==0)
         {
+           console.log("Theft Started");
+            var staff_id=node_staff[i];
+           var staff_no=staffph[staff_id];
             var amt=j.Actual_Power-j.Total_Power;
+            var text="Theft Started in your locality by amount:"+amt;
+            //message to staff
+            //nexmo.message.sendSms('Server',staff_no,text)
             //message part for begining of theft
            for(var m=0;m<childatnodes[i].length;m++)
            {
             var ind=i+'-'+childatnodes[i][m];
-            var text="Theft Started in your locality by amount:"+amt;
+           
            // nexmo.message.sendSms('Server',phoneNo[ind],text)
            }
     firebase.database().ref('/PowerAtNodes/'+i+'/'+'/LimitAmt').set(j.Actual_Power-j.Total_Power)
         }
-        else if(j.Actual_Power-j.Total_Power-200>0&&j.LimitAmt!=0)
+        else if(j.Actual_Power-j.LimitAmt-j.Total_Power-200>0&&j.LimitAmt!=0)
         {
             //for increment in theft
+            console.log("Theft Increased");
+            var staff_id=node_staff[i];
+           var staff_no=staffph[staff_id];
             var amt=j.Actual_Power-j.Total_Power;
-            //message part for begining of theft
+            var text="Theft Increased in your locality by amount:"+amt;
+             //message to staff
+            //nexmo.message.sendSms('Server',staff_no,text)
            for(var m=0;m<childatnodes[i].length;m++)
            {
             var ind=i+'-'+childatnodes[i][m];
-            var text="Theft Increased in your locality by amount:"+amt;
+           
             //nexmo.message.sendSms('Server',phoneNo[ind],text)
            }
   firebase.database().ref('/PowerAtNodes/'+i+'/'+'/LimitAmt').set(j.Actual_Power-j.Total_Power-j.LimitAmt)
         }
-        else if(j.Actual_Power<=j.Total_Power)
+        else if(j.Actual_Power<=j.Total_Power&&j.LimitAmt!=0)
         {
             //for stop in theft
-            //message part for begining of theft
+            console.log("theft stopped");
+            var staff_id=node_staff[i];
+           var staff_no=staffph[staff_id];
+           var text="Theft Stopped in your locality";
+            //message to staff
+            //nexmo.message.sendSms('Server',staff_no,text)
            for(var m=0;m<childatnodes[i].length;m++)
            {
             var ind=i+'-'+childatnodes[i][m];
-            var text="Theft Stopped in your locality";
+           
            // nexmo.message.sendSms('Server',phoneNo[ind],text)
            }
   firebase.database().ref('/PowerAtNodes/'+i+'/'+'/LimitAmt').set(0)
         }
     }
   })
-  
