@@ -97,7 +97,7 @@ app.post('/staff',function(req,res)
        address:address
    })
 })
-server.listen(5000||process.env.PORT)
+server.listen(process.env.PORT||5000,"0.0.0.0")
 firebase.database().ref('/Users_Database/').on("value",function(snapshot){
 var ph=snapshot.val();
 for(var i in ph)
