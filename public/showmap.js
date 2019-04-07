@@ -160,7 +160,7 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
             position:cords,
             map:map,
             icon:icon[no],
-            url:'http://localhost:3000/node_actions.html',
+            url:'node_actions.html',
             node:nod
         })  
     google.maps.event.addListener(marker,'click', function() {
