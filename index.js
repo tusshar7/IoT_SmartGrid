@@ -97,7 +97,7 @@ app.post('/staff',function(req,res)
        address:address
    })
 })
-server.listen(3000, () => console.log('Website open on http://localhost:2345'))
+server.listen(3000, () => console.log('Website open on http://localhost:2345')||process.env.PORT)
 firebase.database().ref('/Users_Database/').on("value",function(snapshot){
 var ph=snapshot.val();
 for(var i in ph)
