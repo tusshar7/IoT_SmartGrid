@@ -65,10 +65,12 @@ setInterval(function(){firebase.database().ref('/Transformer/').on("value",funct
     for(var i in Transformer)
     {  
         var j=Transformer[i];
-         var sub=j.subid
+         var sub=j.subid;
+         var par=j.pnode;
          var nod="T"+i;
         addmarker({lat:j.lat,lng:j.lng},1,nod)
         makeline('green',[{lat:j.lat,lng:j.lng},substation_cords[sub]]);
+        makeline('green',[{lat:j.lat,lng:j.lng},nodes_cords[par]]);
     }
   })},2000)
   firebase.database().ref('/nodes/').on("value",function(snapshot){
@@ -127,7 +129,9 @@ setInterval(function(){firebase.database().ref('/Users_Database/').on("value",fu
     {
       var j=Substation[i];
       var nod="S"+i;
+      var par=j.parent_node;
       addmarker({lat:j.lat,lng:j.lng},0,nod)
+      makeline('green',[{lat:j.lat,lng:j.lng},nodes_cords[par]]);
     }
   })},2000)
   setInterval(function(){firebase.database().ref('/nodes_static/').once("value",function(snapshot){
