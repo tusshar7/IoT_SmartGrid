@@ -134,29 +134,31 @@ firebase.database().ref('/nodes/').on("value",function(snapshot){
       {
         var index=i+'-'+k;  
         var l=j[k];
-        user_powers[index]=l.power;
-          if(l.VoltageA>100&&l.VoltageA-100-l.LimitAmt>200)
+        user_powers[index]=l.load;
+          if(l.load>100&&l.load-100-l.LimitAmt>200&&l.LimitAmt!=0)
           {
              //message part for theft increase;
-             var amt=l.VoltageA-100-l.LimitAmt;
+             var amt=l.load-100-l.LimitAmt;
              var text='Theft Increased by:'+amt;
-             firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(l.VoltageA-l.LimitAmt)
+             firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(l.load-l.LimitAmt)
              console.log(text)
            //  nexmo.message.sendSms('Server',phoneNo[index], text)
           }
-          else if(l.VoltageA<=100&&l.LimitAmt!=0)
+          else if(l.load<=100&&l.LimitAmt!=0)
           {
             //message part for theft stoped
             var text='Theft Stopped!!'
             firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(0)
+            console.log(text);
             //nexmo.message.sendSms('Server', phoneNo[index], text)
           }
-          else if(l.VoltageA>100&&l.LimitAmt==0)
+          else if(l.load>100&&l.LimitAmt==0)
           {
               //message for theft begin
-              var amt=l.VoltageA-100;
+              var amt=l.load-100;
               var text='Theft Begin by amount:'+amt;
-              firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(l.VoltageA-100)
+              firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(l.load-100)
+              console.log(text);
              // nexmo.message.sendSms('Server',phoneNo[index],text)
           }
       }
