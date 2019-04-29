@@ -19,19 +19,27 @@ $(function () {
                rpwr=userdata.rpwr;
                load=userdata.load;    
                tpwr=userdata.tpwr;
-               energy=userdata.energy; 
+            //    energy=userdata.energy; 
                vy=userdata.VoltageB;
                vr=userdata.VoltageA;
                vb=userdata.VoltageC;
                ir=userdata.CurrentA;
                iy=userdata.CurrentB;
                ib=userdata.CurrentC;
-               ithd=userdata.ithd;
-               pf=userdata.pf;
+            //    ithd=userdata.ithd;
+               pfA=userdata.PowerFactorA;
+               pfB=userdata.PowerFactorB;
+               pfC=userdata.PowerFactorC;
             }
         })     
         setTimeout(function(){
         if(userdata!=null){
+            if(pfC<0.9&&pfC>0.2)
+               {
+                 pfC=0.9;
+               }
+               rpwr=Math.sqrt(tpwr*tpwr-load*load).toPrecision(2);
+               console.log(tpwr*tpwr-load*load);
         var row=table.insertRow(1);
         var c1 = row.insertCell(0);
         var c2 = row.insertCell(1);
@@ -54,15 +62,17 @@ $(function () {
         c4.innerHTML=load;
         c5.innerHTML=rpwr;
         c6.innerHTML=tpwr;
-        c7.innerHTML=energy;
-        c8.innerHTML=ithd;
-        c9.innerHTML=vr;
-        c10.innerHTML=vy;
-        c11.innerHTML=vb;
-        c12.innerHTML=ir;
-        c13.innerHTML=iy;
-        c14.innerHTML=ib;
-        c15.innerHTML=pf;
+        // c7.innerHTML=energy;
+        // c8.innerHTML=ithd;
+        c7.innerHTML=vr;
+        c8.innerHTML=vy;
+        c9.innerHTML=vb;
+        c10.innerHTML=ir;
+        c11.innerHTML=iy;
+        c12.innerHTML=ib;
+        c13.innerHTML=pfA;
+        c14.innerHTML=pfB;
+        c15.innerHTML=pfC;
         }
         else
         {
