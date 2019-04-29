@@ -13,6 +13,7 @@ var node_power=[];
 var user_powers=[];
 var childatnodes=[];
 var nodes_child=[];
+var phase_info=[];
 var firebase = require("firebase");
 const config = {
     apiKey: "AIzaSyC8k4TtxNOwddFIXWjlNtxuz6pHY0puC5U",
@@ -104,6 +105,7 @@ for(var i in ph)
 {
     var j=ph[i];
     phoneNo[i]=j.phone;
+    phase_info[i]=j.phase;
     console.log(j.phone)
 }
 })
@@ -159,7 +161,7 @@ firebase.database().ref('/nodes/').on("value",function(snapshot){
               var text='Theft Begin by amount:'+amt;
               firebase.database().ref('/nodes/'+i+'/'+k+'/LimitAmt').set(l.load-100)
               console.log(text);
-             // nexmo.message.sendSms('Server',phoneNo[index],text)
+             nexmo.message.sendSms('Server',phoneNo[index],text)
           }
       }
   }
@@ -267,3 +269,137 @@ firebase.database().ref('/PowerAtNodes/').on("value",function(snapshot){
         }
     }
   })
+  /*
+  let promise1;
+  setInterval(function(){
+  firebase.database().ref('/nodes/').once("value",function(snapshot){
+      var loadbalance=snapshot.val()
+      var flag=0;
+      for(var i in loadbalance)
+      {
+        var toshift=-1;
+        var fromshift=-1;
+        var j=loadbalance[i];  
+        for(var k in j)
+          {
+            var ind=i+'-'+ k;  
+            console.log(ind);
+            var l=j[k];
+            var from_user,to_user;
+              var powA=l.CurrentA*l.VoltageA;
+              var powB=l.CurrentB*l.VoltageB;
+              var powC=l.CurrentC*l.VoltageC;
+              console.log(powA);
+              console.log(powB);
+              console.log(powC);
+              var max=-1,min=-1;var val_max,val_min;
+              if(powA>powB&&powA>powC)
+              {
+                  max=1;val_max=powA;from_user=ind;
+              }
+              else if(powB>powC&&powB>powA)
+              {
+                  max=2;val_max=powB;from_user=ind;
+              }
+              else if(powC>powA&&powC>powB)
+              {
+                  max=3;val_max=powC;from_user=ind;
+              }
+              else if(powA<powB&&powA<powC)
+              {
+                  min=1;val_min=powA;to_user=ind;
+              }
+              else if(powB<powC&&powB<powA)
+              {
+                  min=2;val_min=powB;to_user=ind;
+              }
+              else if(powC<powA&&powC<powB)
+              {
+                  min=3;val_min=powC;to_user=ind;
+              }
+              if(phase_info[ind]==1)
+              {
+                if(fromshift==-1)
+                fromshift=max;
+                console.log(fromshift);
+              }
+              else if(phase_info[ind]==3)
+              {
+                if(toshift==-1)  
+                toshift=min;
+                console.log(toshift)
+              }
+             if(fromshift!=-1&&toshift!=-1&&fromshift!=toshift)
+             {
+                var a=from_user.split("-")[0];
+                var b=from_user.split("-")[1];
+                firebase.database().ref('/action/').set({
+                    command:0,
+                    node:a,
+                    user:b,
+                    stat:1,
+                    phase:fromshift,
+                    sensor:fromshift
+                }) 
+                checking(from_user,to_user,toshift)
+                flag=1;
+            }
+            if(flag==1)break;
+          }
+          if(flag==1)break;
+      }
+  })},7000)
+  function checking(from_user,to_user,toshift)
+  {
+    var z=[];
+    z.push(to_user);
+    z.push(toshift);
+    var a=from_user.split("-")[0];
+    var b=from_user.split("-")[1];
+    firebase.database().ref('/nodes/'+a+'/'+b+'/').on("value",function(snapshot){
+     var l=snapshot.val();
+     promise1 = new Promise( (resolve, reject) => {
+         console.log(l.load);
+        if(l.load<5)
+        {
+            dataReceivedSuccessfully=true;
+            console.log("jfihd0");
+        } 
+        else
+        {
+            dataReceivedSuccessfully=false;
+        }
+        
+        if (dataReceivedSuccessfully) 
+          resolve(z); 
+        
+        if (!dataReceivedSuccessfully) 
+          reject('Data Corrupted!'); 
+        
+        }) 
+        promise1.then( (z) => {
+            console.log("sadbab");
+            var c=z[0].split("-")[0];
+            var d=z[0].split("-")[1];
+            var sensor;
+            console.log(toshift);
+            if(z[1]==1||z[1]==2)sensor=4;
+            if(z[1]==3||z[1]==2)sensor=5;
+            console.log(sensor);
+            setTimeout(function(){
+            firebase.database().ref('/action/').set({
+                command:0,
+                node:c,
+                user:d,
+                sensor:sensor,
+                stat:1,
+                phase:z[1]
+            })},3000)
+        })
+        promise1.catch( (message) => {
+           console.log(message);
+        })
+    })
+  }
+  */
+ 
